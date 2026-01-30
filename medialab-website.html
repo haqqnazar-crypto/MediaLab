@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediaLab — Голос Школы | Мектеп Үні</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF3366;
+            --secondary: #6C63FF;
+            --accent: #FFD600;
+            --dark: #0A0E27;
+            --light: #F8F9FA;
+            --text: #2D3748;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-warm: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            color: var(--text);
+            background: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 14px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            color: var(--text);
+        }
+
+        .lang-btn.active {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .lang-content {
+            display: none;
+        }
+
+        .lang-content.active {
+            display: block;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 40px 20px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 51, 102, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(108, 99, 255, 0.3) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+            color: white;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-logo {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            letter-spacing: -2px;
+        }
+
+        .hero-tagline {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            margin-bottom: 15px;
+            font-weight: 300;
+            opacity: 0.95;
+        }
+
+        .hero-mission {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            margin-bottom: 40px;
+            opacity: 0.9;
+            font-weight: 400;
+            line-height: 1.8;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-quote {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            font-style: italic;
+            opacity: 0.85;
+            border-left: 4px solid var(--accent);
+            padding-left: 20px;
+            margin: 30px auto;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .cta-btn {
+            padding: 16px 40px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Manrope', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .cta-primary {
+            background: var(--accent);
+            color: var(--dark);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 214, 0, 0.4);
+        }
+
+        .cta-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .cta-secondary:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-3px);
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 60px;
+            text-align: center;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Platforms Grid */
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .platform-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.12);
+            border-color: var(--secondary);
+        }
+
+        .platform-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .platform-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .platform-description {
+            color: var(--text);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .platform-details {
+            font-size: 0.9rem;
+            color: #718096;
+            line-height: 1.8;
+        }
+
+        /* Values Section */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .value-card {
+            background: var(--gradient-warm);
+            color: white;
+            padding: 35px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: scale(1.05);
+        }
+
+        .value-emoji {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .value-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .value-description {
+            opacity: 0.95;
+            line-height: 1.7;
+        }
+
+        /* Benefits Section */
+        .benefits-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .benefit-item {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .benefit-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .benefit-content h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .benefit-content p {
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 40px 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .stat-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* Social Links */
+        .social-section {
+            background: var(--dark);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px 35px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .social-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-3px);
+            border-color: var(--accent);
+        }
+
+        .social-icon {
+            font-size: 2rem;
+        }
+
+        /* Form Section */
+        .form-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 100px 20px;
+        }
+
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .form-intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-intro h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .form-intro p {
+            font-size: 1.2rem;
+            color: var(--text);
+            line-height: 1.8;
+        }
+
+        .google-form-embed {
+            width: 100%;
+            height: 1200px;
+            border: none;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 20px 30px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Space Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-text {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .footer-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.2);
+            margin: 40px 0 20px;
+        }
+
+        .footer-bottom {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 20px;
+            }
+
+            .section {
+                padding: 60px 20px;
+            }
+
+            .section-title {
+                margin-bottom: 40px;
+            }
+
+            .platforms-grid,
+            .values-grid,
+            .benefits-list {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .cta-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .social-links {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .lang-switcher {
+                top: 10px;
+                right: 10px;
+            }
+
+            .google-form-embed {
+                height: 1400px;
+            }
+
+            .form-container {
+                padding: 40px 20px;
+            }
+        }
+
+        /* Scroll Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Switcher -->
+    <div class="lang-switcher">
+        <button class="lang-btn active" onclick="switchLang('ru')">RU</button>
+        <button class="lang-btn" onclick="switchLang('kk')">ҚАЗ</button>
+    </div>
+
+    <!-- Russian Content -->
+    <div class="lang-content active" id="ru-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-logo">MediaLab</h1>
+                <p class="hero-tagline">Голос Школы | Мектеп Үні</p>
+                <p class="hero-mission">
+                    Мы создаём медиапространство, где звучит голос каждого ученика. 
+                    Наша миссия — объединить школьное сообщество через качественный контент.
+                </p>
+                <blockquote class="hero-quote">
+                    «Школа без голоса — это просто здание»<br>
+                    <small style="opacity: 0.8;">— Главная философия MediaLab</small>
+                </blockquote>
+                <div class="cta-buttons">
+                    <a href="#join-form" class="cta-btn cta-primary">
+                        <span>✨</span> Присоединиться к команде
+                    </a>
+                    <a href="#platforms" class="cta-btn cta-secondary">
+                        <span>📻</span> Наши платформы
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Platforms Section -->
+        <section class="section" id="platforms">
+            <h2 class="section-title">Наши платформы</h2>
+            <div class="platforms-grid">
+                <div class="platform-card fade-in">
+                    <span class="platform-icon">📻</span>
+                    <h3 class="platform-title">MediaLab FM</h3>
+                    <p class="platform-description">
+                        Школьное радио с драйвом и информацией на волне
+                    </p>
+                    <div class="platform-details">
+                        <strong>График:</strong> Понедельник 08:00, Пятница 08:45<br>
+                        <strong>Формат:</strong> 5-7 минутные выпуски<br>
+                        <strong>Контент:</strong> Анонсы, новости, мотивация
+                    </div>
+                </div>
+
+                <div class="platform-card fade-in">
+                    <span class="platform-icon">📰</span>
+                    <h3 class="platform-title">Газета «Мектеп Үні»</h3>
+                    <p class="platform-description">
+                        Ежемесячная цифровая летопись школьной жизни
+                    </p>
+                    <div class="platform-details">
+                        <strong>Выпуск:</strong> Ежемесячно<br>
+                        <strong>Формат:</strong> 10 страниц PDF<br>
+                        <strong>Рубрики:</strong> Новости, интервью, творчество, образование
+                    </div>
+                </div>
+
+                <div class="platform-card fade-in">
+                    <span class="platform-icon">📱</span>
+                    <h3 class="platform-title">Соцсети</h3>
+                    <p class="platform-description">
+                        Мы в цифровом пространстве — быстро и ярко
+                    </p>
+                    <div class="platform-details">
+                        <strong>Instagram:</strong> Reels, Stories, прямые эфиры<br>
+                        <strong>Telegram:</strong> PDF газеты, аудио, анонсы<br>
+                        <strong>Цель:</strong> Оперативное взаимодействие с аудиторией
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Values Section -->
+        <section class="section" style="background: #f8f9fa;">
+            <h2 class="section-title">Наши ценности</h2>
+            <div class="values-grid">
+                <div class="value-card fade-in">
+                    <span class="value-emoji">🌟</span>
+                    <h3 class="value-title">Каждый ребёнок — талант</h3>
+                    <p class="value-description">
+                        Мы создаём инклюзивную среду, где каждый может раскрыть свой потенциал
+                    </p>
+                </div>
+                <div class="value-card fade-in">
+                    <span class="value-emoji">📚</span>
+                    <h3 class="value-title">Знания и Развитие</h3>
+                    <p class="value-description">
+                        Постоянное обучение и совершенствование в медиатехнологиях
+                    </p>
+                </div>
+                <div class="value-card fade-in">
+                    <span class="value-emoji">🤝</span>
+                    <h3 class="value-title">Доверие и Поддержка</h3>
+                    <p class="value-description">
+                        Сплочённая команда, основанная на взаимопомощи и уважении
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section class="section">
+            <h2 class="section-title">Что вы получите?</h2>
+            <div class="benefits-list">
+                <div class="benefit-item fade-in">
+                    <span class="benefit-number">01</span>
+                    <div class="benefit-content">
+                        <h3>Медиаграмотность</h3>
+                        <p>Научитесь создавать качественный контент и критически анализировать информацию в современном медиапространстве</p>
+                    </div>
+                </div>
+                <div class="benefit-item fade-in">
+                    <span class="benefit-number">02</span>
+                    <div class="benefit-content">
+                        <h3>Лидерские навыки</h3>
+                        <p>Развивайте способность управлять проектами, работать в команде и принимать важные решения</p>
+                    </div>
+                </div>
+                <div class="benefit-item fade-in">
+                    <span class="benefit-number">03</span>
+                    <div class="benefit-content">
+                        <h3>Личное портфолио</h3>
+                        <p>Создавайте реальные публикации, которые станут вашим преимуществом при поступлении в вуз</p>
+                    </div>
+                </div>
+                <div class="benefit-item fade-in">
+                    <span class="benefit-number">04</span>
+                    <div class="benefit-content">
+                        <h3>Награды и признание</h3>
+                        <p>Лучшие участники месяца получают заслуженные награды и признание</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h2 class="section-title" style="color: white; -webkit-text-fill-color: white;">Наши цели на 2024-2025</h2>
+            <div class="stats-grid">
+                <div class="stat-card fade-in">
+                    <div class="stat-number">32</div>
+                    <div class="stat-label">Радиовыпуска</div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-label">Слушателей</div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Выпуска газеты</div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-number">15-20</div>
+                    <div class="stat-label">Участников</div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Тренингов</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Section -->
+        <section class="social-section">
+            <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 20px;">Следите за нами</h2>
+            <p style="font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin: 0 auto 40px;">
+                Присоединяйтесь к нашему сообществу в социальных сетях
+            </p>
+            <div class="social-links">
+                <a href="https://instagram.com/medialab.12" target="_blank" class="social-link">
+                    <span class="social-icon">📸</span>
+                    <span>Instagram @medialab.12</span>
+                </a>
+                <a href="https://t.me/medialabsatbayev" target="_blank" class="social-link">
+                    <span class="social-icon">✈️</span>
+                    <span>Telegram @medialabsatbayev</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Form Section -->
+        <section class="form-section" id="join-form">
+            <div class="form-container">
+                <div class="form-intro">
+                    <h2>Присоединяйтесь к MediaLab!</h2>
+                    <p>Заполните форму ниже и станьте частью нашей творческой команды</p>
+                </div>
+                <iframe 
+                    src="https://docs.google.com/forms/d/e/1FAIpQLSd3ymxo_z2I08ur5Tjk1oJppFtjmbbIkBLLLqjsyD7FyLGpUQ/viewform?embedded=true" 
+                    class="google-form-embed"
+                    frameborder="0" 
+                    marginheight="0" 
+                    marginwidth="0">
+                    Загрузка…
+                </iframe>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo">MediaLab</div>
+                <p class="footer-text">
+                    КГУ «Опорная школа (ресурсный центр) №12 города Балхаш»<br>
+                    MediaLab — здесь звучит будущее!
+                </p>
+                <div class="footer-divider"></div>
+                <p class="footer-bottom">
+                    © 2024-2025 MediaLab. Все права защищены.<br>
+                    «Измени мир, изменив себя!» | «Өзіңді өзгерту арқылы — әлемді өзгерт!»
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Kazakh Content -->
+    <div class="lang-content" id="kk-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-logo">MediaLab</h1>
+                <p class="hero-tagline">Мектеп Үні | Голос Школы</p>
+                <p class="hero-mission">
+                    Біз әр оқушының дауысы естілетін медиа кеңістігін жасаймыз. 
+                    Біздің миссиямыз — сапалы контент арқылы мектеп қауымдастығын біріктіру.
+                </p>
+                <blockquote class="hero-quote">
+                    «Дауысы жоқ мектеп — бұл жай ғана ғимарат»<br>
+                    <small style="opacity: 0.8;">— MediaLab-тың негізгі философиясы</small>
+                </blockquote>
+                <div class="cta-buttons">
+                    <a href="#join-form" class="cta-btn cta-primary">
+                        <span>✨</span> Командаға қосылу
+                    </a>
+                    <a href="#platforms" class="cta-btn cta-secondary">
+                        <span>📻</span> Біздің платформалар
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Platforms Section -->
+        <section class="section" id="platforms">
+            <h2 class="section-title">Біздің платформалар</h2>
+            <div class="platforms-grid">
+                <div class="platform-card fade-in">
+                    <span class="platform-icon">📻</span>
+                    <h3 class="platform-title">MediaLab FM</h3>
+                    <p class="platform-description">
+                        Драйв пен ақпараттың мектептік толқынында
+                    </p>
+                    <div class="platform-details">
+                        <strong>Кесте:</strong> Дүйсенбі 08:00, Жұма 08:45<br>
+                        <strong>Формат:</strong> 5-7 минуттық хабарлар<br>
+                        <strong>Контент:</strong> Анонстар, жаңалықтар, мотивация
+                    </div>
+                </div>
+
+                <div class="platform-card fade-in">
+                    <span class="platform-icon">📰</span>
+                    <h3 class="platform-title">«Мектеп Үні» газеті</h3>
+                    <p class="platform-description">
+                        Мектеп өмірінің айлық цифрлық жылнамасы
+                    </p>
+                    <div class="platform-details">
+                        <strong>Шығарылым:</strong> Ай сайын<br>
+                        <strong>Формат:</strong> 10 бет PDF<br>
+                        <strong>Бөлімдер:</strong> Жаңалықтар, интервью, шығармашылық, білім
+                    </div>
+                </div>
+
+                <div class="platform-card fade-in">
+                    <span class="platform-icon">📱</span>
+                    <h3 class="platform-title">Әлеуметтік желілер</h3>
+                    <p class="platform-description">
+                        Біз цифрлық кеңістікте — жылдам және жарқын
+                    </p>
+                    <div class="platform-details">
+                        <strong>Instagram:</strong> Reels, Stories, тікелей эфирлер<br>
+                        <strong>Telegram:</strong> PDF газет, аудио, анонстар<br>
+                        <strong>Мақсат:</strong> Аудиториямен жедел байланыс
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Values Section -->
+        <section class="section" style="background: #f8f9fa;">
+            <h2 class="section-title">Біздің құндылықтар</h2>
+            <div class="values-grid">
+                <div class="value-card fade-in">
+                    <span class="value-emoji">🌟</span>
+                    <h3 class="value-title">Әр бала — талант</h3>
+                    <p class="value-description">
+                        Біз әркімнің өз әлеуетін аша алатын инклюзивті орта жасаймыз
+                    </p>
+                </div>
+                <div class="value-card fade-in">
+                    <span class="value-emoji">📚</span>
+                    <h3 class="value-title">Білім мен Даму</h3>
+                    <p class="value-description">
+                        Медиатехнологияларда үздіксіз оқу және жетілдіру
+                    </p>
+                </div>
+                <div class="value-card fade-in">
+                    <span class="value-emoji">🤝</span>
+                    <h3 class="value-title">Сенім мен Қолдау</h3>
+                    <p class="value-description">
+                        Өзара көмек пен құрметке негізделген ұйымшыл команда
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section class="section">
+            <h2 class="section-title">Сіз не аласыз?</h2>
+            <div class="benefits-list">
+                <div class="benefit-item fade-in">
+                    <span class="benefit-number">01</span>
+                    <div class="benefit-content">
+                        <h3>Медиасауаттылық</h3>
+                        <p>Сапалы контент жасауды және қазіргі медиа кеңістігінде ақпаратты сыни талдауды үйреніңіз</p>
+                    </div>
+                </div>
+                <div class="benefit-item fade-in">
+                    <span class="benefit-number">02</span>
+                    <div class="benefit-content">
+                        <h3>Көшбасшылық дағдылары</h3>
+                        <p>Жобаларды басқару, командада жұмыс істеу және маңызды шешімдер қабылдау қабілетін дамытыңыз</p>
+                    </div>
+                </div>
+                <div class="benefit-item fade-in">
+                    <span class="benefit-number">03</span>
+                    <div class="benefit-content">
+                        <h3>Жеке портфолио</h3>
+                        <p>ЖОО-ға түсуде артықшылық болатын нақты жарияланымдар жасаңыз</p>
+                    </div>
+                </div>
+                <div class="benefit-item fade-in">
+                    <span class="benefit-number">04</span>
+                    <div class="benefit-content">
+                        <h3>Марапаттар мен тану</h3>
+                        <p>Айдың үздік қатысушылары лайықты марапаттар мен мойындауға ие болады</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h2 class="section-title" style="color: white; -webkit-text-fill-color: white;">2024-2025 жылға мақсаттарымыз</h2>
+            <div class="stats-grid">
+                <div class="stat-card fade-in">
+                    <div class="stat-number">32</div>
+                    <div class="stat-label">Радио шығарылым</div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-label">Тыңдаушы</div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Газет шығарылымы</div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-number">15-20</div>
+                    <div class="stat-label">Қатысушы</div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Тренинг</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Section -->
+        <section class="social-section">
+            <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 20px;">Бізді қадағалаңыз</h2>
+            <p style="font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin: 0 auto 40px;">
+                Әлеуметтік желілердегі қауымдастығымызға қосылыңыз
+            </p>
+            <div class="social-links">
+                <a href="https://instagram.com/medialab.12" target="_blank" class="social-link">
+                    <span class="social-icon">📸</span>
+                    <span>Instagram @medialab.12</span>
+                </a>
+                <a href="https://t.me/medialabsatbayev" target="_blank" class="social-link">
+                    <span class="social-icon">✈️</span>
+                    <span>Telegram @medialabsatbayev</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Form Section -->
+        <section class="form-section" id="join-form">
+            <div class="form-container">
+                <div class="form-intro">
+                    <h2>MediaLab-қа қосылыңыз!</h2>
+                    <p>Төмендегі нысанды толтырып, біздің шығармашылық командамыздың бөлігі болыңыз</p>
+                </div>
+                <iframe 
+                    src="https://docs.google.com/forms/d/e/1FAIpQLSd3ymxo_z2I08ur5Tjk1oJppFtjmbbIkBLLLqjsyD7FyLGpUQ/viewform?embedded=true" 
+                    class="google-form-embed"
+                    frameborder="0" 
+                    marginheight="0" 
+                    marginwidth="0">
+                    Жүктелуде…
+                </iframe>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo">MediaLab</div>
+                <p class="footer-text">
+                    «Балқаш қаласының №12 тірек мектебі (ресурстық орталық)» КММ<br>
+                    MediaLab — мұнда болашақ естіледі!
+                </p>
+                <div class="footer-divider"></div>
+                <p class="footer-bottom">
+                    © 2024-2025 MediaLab. Барлық құқықтар қорғалған.<br>
+                    «Өзіңді өзгерту арқылы — әлемді өзгерт!» | «Измени мир, изменив себя!»
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Language Switcher
+        function switchLang(lang) {
+            const ruContent = document.getElementById('ru-content');
+            const kkContent = document.getElementById('kk-content');
+            const langBtns = document.querySelectorAll('.lang-btn');
+            
+            if (lang === 'ru') {
+                ruContent.classList.add('active');
+                kkContent.classList.remove('active');
+                langBtns[0].classList.add('active');
+                langBtns[1].classList.remove('active');
+                document.documentElement.lang = 'ru';
+            } else {
+                kkContent.classList.add('active');
+                ruContent.classList.remove('active');
+                langBtns[1].classList.add('active');
+                langBtns[0].classList.remove('active');
+                document.documentElement.lang = 'kk';
+            }
+            
+            // Re-initialize animations for new content
+            initAnimations();
+        }
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Scroll Animations
+        function initAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                el.classList.remove('visible');
+                observer.observe(el);
+            });
+        }
+
+        // Initialize on load
+        window.addEventListener('load', initAnimations);
+    </script>
+</body>
+</html>
